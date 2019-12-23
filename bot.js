@@ -7,8 +7,12 @@ client.on('ready', () => {
 });
 
 client.on('message', msg => {
-    if (msg.content === 'ping') {
-        msg.reply('pong');
+    if (msg.content.substring(0,1) === '.') {
+        if (msg.content == '.help') {
+            msg.reply('Here are our commands:');
+        } else {
+            msg.reply('What bro');
+        }
     }
 });
 
