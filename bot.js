@@ -10,7 +10,7 @@ client.on('ready', () => {
 client.on('message', msg => {
     if (msg.content.substring(0,1) === '.') {
         if (msg.content == '.help') {
-            msg.reply('Here are our commands:');
+            msg.reply('Here are our commands:\nCompliments: .loveme\nWeather: .weather {city}');
         } else if (msg.content === '.loveme') {
 
             request('https://complimentr.com/api', {json: true }, (err, res, body) => {
@@ -20,8 +20,17 @@ client.on('message', msg => {
                     msg.reply(body.compliment);
                 }
             });
+        } else if (msg.content.substring(1, 8) === 'weather') {
+            var city = msg.content.substring(8);
+            request(('http://api.openweathermap.org/data/2.5/weather?q=' + msg.content.substring(8) + '&APPID=dccc2f17b5a55973b45f21ebd951add2'), {json: true }, (err, res, body) => {
+                if (err) {
+                    msg.reply('please type correct city name');
+                } else {
+                    msg.reply(city + ' is ' + Math.round(body.main.temp - 273.15) + ' degrees celsius or ' + Math.round(((body.main.temp -273.15) * 9 / 5) + 32) + " degrees Farenheit.");
+                    msg.reply('and the sky has ' + body.weather[0].description);
+                }
+            });
         } else if (msg.content === '.trendygiphy') {
-
             request('https://api.giphy.com/v1/gifs/trending?api_key=eRCPBSuu0d1mx3XXbgyTeiU2fcuIbce5&limit=1&rating=G', {json: true }, (err, res, body) => {
               if (err) {
                 msg.reply('yikes');
