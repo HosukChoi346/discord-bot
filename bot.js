@@ -10,7 +10,7 @@ client.on('ready', () => {
 client.on('message', msg => {
     if (msg.content.substring(0,1) === '.') {
         if (msg.content == '.help') {
-            msg.reply('Here are our commands:\nCompliments: .loveme');
+            msg.reply('Here are our commands:\nCompliments: .loveme\nWeather: .weather {city}');
         } else if (msg.content === '.loveme') {
 
             request('https://complimentr.com/api', {json: true }, (err, res, body) => {
