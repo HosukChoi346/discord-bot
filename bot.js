@@ -26,8 +26,12 @@ client.on('message', msg => {
                 if (err) {
                     msg.reply('please type correct city name');
                 } else {
-                    msg.reply(city + ' is ' + Math.round(body.main.temp - 273.15) + ' degrees celsius or ' + Math.round(((body.main.temp -273.15) * 9 / 5) + 32) + " degrees Farenheit.");
-                    msg.reply('and the sky has ' + body.weather[0].description);
+                    try {
+                        msg.reply(city + ' is ' + Math.round(body.main.temp - 273.15) + ' degrees celsius or ' + Math.round(((body.main.temp -273.15) * 9 / 5) + 32) + " degrees Farenheit.");
+                        msg.reply('and the sky has ' + body.weather[0].description);
+                    } catch(error) {
+                        msg.reply('enter a valid city (capitals matter!!)');
+                    }
                 }
             });
         } else if (msg.content === '.trendygiphy') {
