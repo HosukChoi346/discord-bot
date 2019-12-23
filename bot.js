@@ -11,7 +11,7 @@ client.on('message', msg => {
         if (msg.content == '.help') {
             msg.reply('Here are our commands:');
         } else {
-            msg.reply('What bro');
+            msg.reply('What bro, hahaha unless...?');
         }
     }
 });
