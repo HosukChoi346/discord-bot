@@ -1,6 +1,5 @@
 const Discord = require('discord.js'); //node.js' visibility is module based
 const { prefix, token, } = require('./auth.json');
-const ytdl = require('ytdl-core');
 const client = new Discord.Client(); //so we need to import these
 const queue = new Map();
 const auth = require('./auth.json');//importing
