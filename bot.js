@@ -1,6 +1,7 @@
 const Discord = require('discord.js'); //node.js' visibility is module based
 const { prefix, token, } = require('./auth.json');
 const client = new Discord.Client(); //so we need to import these
+const ytdl = require('ytdl-core');
 const queue = new Map();
 const auth = require('./auth.json');//importing
 const request = require('request');
@@ -74,7 +75,7 @@ client.on('message', async msg => {
 
         const serverQueue = queue.get(msg.guild.id);
         if (msg.content == '.help') {
-            msg.reply('Here are our commands:\nCompliments: .loveme\nWeather: .weather {city}');
+            msg.reply('Here are our commands:\nCompliments: .loveme\nWeather: .weather {city}\nBlackjack: .blackjack\nMusic: .play {url}, .skip, .stop\n');
         } else if (msg.content === '.loveme') {
 
             request('https://complimentr.com/api', {json: true }, (err, res, body) => {
