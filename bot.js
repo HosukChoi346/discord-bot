@@ -75,7 +75,10 @@ client.on('message', async msg => {
 
         const serverQueue = queue.get(msg.guild.id);
         if (msg.content == '.help') {
-            msg.reply('Here are our commands:\nCompliments: .loveme\nWeather: .weather {city}\nBlackjack: .blackjack\nMusic: .play {url}, .skip, .stop\n');
+            msg.reply('Here are our commands:\nCompliments: \n   .loveme\n' +
+                      'Weather:\n   .weather {city}\nBlackjack:\n   ' +
+                      '.blackjack\nMusic:\n   .play {yt url}\n   .skip\n   ' +
+                      '.stop\nGiphy:\n   .giphy {key}\n   .trendygiphy\n');
         } else if (msg.content === '.loveme') {
 
             request('https://complimentr.com/api', {json: true }, (err, res, body) => {
@@ -222,8 +225,6 @@ function play(guild, song) {
 	dispatcher.setVolumeLogarithmic(serverQueue.volume / 5);
 }
 
-client.login(auth.token);
-
 function getDeck() {
     var newDeck = new Array();
     for (var i = 0; i < suits.length; i++) {
@@ -337,3 +338,5 @@ function getTotal(hand) {
     }
     return total;
 }
+
+client.login(auth.token);
