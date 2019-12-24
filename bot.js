@@ -7,8 +7,11 @@ const auth = require('./auth.json');//importing
 const request = require('request');
 var values = ['A', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K']
 var suits = ['spades', 'diamonds', 'clubs', 'hearts'];
-const deck = getDeck();
+var deck = getDeck();
 shuffleDeck();
+var playing = false;
+var player, dealer;
+var played = false;
 
 client.on('ready', () => {
     console.log(`Logged in as ${client.user.tag}!`);
@@ -24,7 +27,51 @@ client.once('disconnect', () => {
 
 client.on('message', async msg => {
     if (msg.author.bot) return;
-    if (msg.content.substring(0,1) === '.') {
+    if (playing) {
+        if (msg.content === '.hit') {
+            player.push(deck.pop());
+            printPlayerHand(player, msg);
+            let currTotal = getTotal(player);
+            if (currTotal > 21) {
+                msg.reply("Your hand is over 21! You bust!");
+                deck = getDeck();
+                shuffleDeck();
+                playing = false;
+            } else {
+                msg.reply("What is your next move?");
+            }
+            played = true;
+        } else if (msg.content === '.stay') {
+            let playerTotal = getTotal(player);
+            let dealerTotal = getTotal(dealer);
+            while (dealerTotal < 17) {
+                dealer.push(deck.pop());
+                printDealerHandFinal(dealer, msg);
+                dealerTotal = getTotal(dealer);
+            }
+            if (dealerTotal > 21) {
+                msg.reply("Dealer busts! you win!");
+            } else {
+                let difference = playerTotal - dealerTotal;
+                if (difference == 0) {
+                    printPlayerHand(player, msg);
+                    printDealerHandFinal(dealer, msg);
+                    msg.reply("You guys tied, GG");
+                } else if (difference < 0) {
+                    printDealerHandFinal(dealer, msg);
+                    msg.reply("Dealer won! RIP your monies");
+                } else {
+                    printDealerHandFinal(dealer, msg);
+                    msg.reply("You won! way to beat the odds!");
+                }
+            }
+            deck = getDeck();
+            shuffleDeck();
+            playing = false;
+            played = true;
+        }
+    }
+    if (msg.content.substring(0,1) === '.' && !played) {
 
         const serverQueue = queue.get(msg.guild.id);
         if (msg.content == '.help') {
@@ -77,6 +124,7 @@ client.on('message', async msg => {
               }
             });
         } else if (msg.content === '.blackjack') {
+            playing = true;
             blackjack(msg);
         } else if (msg.content.substring(0, 5) === '.play') {
             execute(msg, serverQueue);
@@ -91,6 +139,7 @@ client.on('message', async msg => {
             msg.reply('What bro, hahaha unless...?');
         }
     }
+    played = false;
 });
 
 async function execute(msg, serverQueue) {
@@ -178,7 +227,7 @@ client.login(auth.token);
 function getDeck() {
     var newDeck = new Array();
     for (var i = 0; i < suits.length; i++) {
-        for (var x = 0; x< values.length; x++) {
+        for (var x = 0; x < values.length; x++) {
             var card = {Value: values[x], Suit: suits[i]};
             newDeck.push(card);
         }
@@ -210,11 +259,12 @@ function blackjack(message) {
 
     printPlayerHand(player, message);
     printDealerHand(dealer, message);
+    message.reply('What is your next move?: \n.hit (draw a card)\n.stay (play this hand out)');
 }
 
 function printPlayerHand(hand, message) {
     for (var i = 0; i < hand.length; i++) {
-        message.reply('You have a ' + hand[i].Value + ' of ' + hand[0].Suit);
+        message.reply('You have a ' + hand[i].Value + ' of ' + hand[i].Suit);
     }
     let total = getTotal(hand);
     message.reply('Your total is ' + total);
@@ -222,6 +272,14 @@ function printPlayerHand(hand, message) {
 
 function printDealerHand(hand, message) {
     message.reply('Dealer\'s second card is the ' + hand[1].Value + ' of ' + hand[1].Suit);
+}
+
+function printDealerHandFinal(hand, message) {
+    for (var i = 0; i < hand.length; i++) {
+        message.reply('Dealer has a ' + hand[i].Value + ' of ' + hand[i].Suit);
+    }
+    let total = getTotal(hand);
+    message.reply('Dealer total is ' + total);
 }
 
 function getTotal(hand) {
