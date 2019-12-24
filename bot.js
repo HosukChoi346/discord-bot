@@ -5,7 +5,6 @@ const client = new Discord.Client(); //so we need to import these
 const queue = new Map();
 const auth = require('./auth.json');//importing
 const request = require('request');
-const ytdl = require('ytdl-core');
 var values = ['A', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K']
 var suits = ['spades', 'diamonds', 'clubs', 'hearts'];
 const deck = getDeck();
@@ -77,10 +76,8 @@ client.on('message', async msg => {
                 msg.reply(body.data[0].images.original.url);
               }
             });
-<<<<<<< HEAD
         } else if (msg.content === '.blackjack') {
             blackjack(msg);
-=======
         } else if (msg.content.substring(0, 5) === '.play') {
             execute(msg, serverQueue);
             return;
@@ -90,7 +87,6 @@ client.on('message', async msg => {
         } else if (msg.content.substring(0, 5) === '.stop') {
             stop(msg, serverQueue);
             return;
->>>>>>> c22b4dbfb07ff9ea44c9869291a01a9842c28316
         } else {
             msg.reply('What bro, hahaha unless...?');
         }
